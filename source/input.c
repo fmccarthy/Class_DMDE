@@ -3253,8 +3253,16 @@ int input_read_parameters_species(struct file_content * pfc,
       class_read_double("Omega_EDE",pba->Omega_EDE);
       class_read_double("cs2_fld",pba->cs2_fld);
     }
-  }
 
+    // FMcC DMDE edit
+    class_call(parser_read_double(pfc,"Gamma_DMDE",&param2,&flag2,errmsg),
+             errmsg,
+             errmsg);
+    if (flag2 = _TRUE_) {
+        pba->Gamma_DMDE = param2;
+    }
+    // end FMcC DMDE edit
+  }
   /** 8.b) If Omega scalar field (SCF) is different from 0 */
   if (pba->Omega0_scf != 0.){
 
