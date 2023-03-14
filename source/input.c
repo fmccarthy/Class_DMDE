@@ -3261,6 +3261,7 @@ int input_read_parameters_species(struct file_content * pfc,
     if (flag2 = _TRUE_) {
         pba->Gamma_DMDE = param2;
     }
+    //printf("GammaDMDE is %f \n",pba->Gamma_DMDE);
     // end FMcC DMDE edit
   }
   /** 8.b) If Omega scalar field (SCF) is different from 0 */
@@ -5785,6 +5786,10 @@ int input_default_params(struct background *pba,
   pba->cs2_fld = 1.;
   /** 9.a.2.1) 'CLP' case */
   pba->wa_fld = 0.;
+  // FMcC DMDE edit
+  pba->Gamma_DMDE = 0.0;
+  // end FMcC DMDE edit
+
   /** 9.a.2.2) 'EDE' case */
   pba->Omega_EDE = 0.;
   /** 9.b) Omega scalar field */

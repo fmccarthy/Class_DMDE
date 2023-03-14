@@ -5815,6 +5815,7 @@ int perturbations_initial_conditions(struct precision * ppr,
       if (pba->has_cdm == _TRUE_) {
         ppw->pv->y[ppw->pv->index_pt_delta_cdm] -= 3.*a_prime_over_a*alpha;
         ppw->pv->y[ppw->pv->index_pt_theta_cdm] = k*k*alpha;
+
       }
 
       if (pba->has_idm == _TRUE_){
@@ -5835,6 +5836,8 @@ int perturbations_initial_conditions(struct precision * ppr,
         ppw->pv->y[ppw->pv->index_pt_delta_fld] -= 3*(1.+w_fld)*a_prime_over_a*alpha;
         ppw->pv->y[ppw->pv->index_pt_theta_fld] += k*k*alpha;
       }
+
+
 
       /* scalar field: check */
       if (pba->has_scf == _TRUE_) {
@@ -9223,6 +9226,7 @@ int perturbations_derivs(double tau,
         dy[pv->index_pt_delta_cdm] = -(y[pv->index_pt_theta_cdm]+metric_continuity); /* cdm density */
 
         dy[pv->index_pt_theta_cdm] = - a_prime_over_a*y[pv->index_pt_theta_cdm] + metric_euler; /* cdm velocity */
+
       }
 
       /** - ----> synchronous gauge: cdm density only (velocity set to zero by definition of the gauge) */
@@ -9386,6 +9390,25 @@ int perturbations_derivs(double tau,
       }
 
     }
+
+
+    // FMcC DMDE edit
+        if (pba->Gamma_DMDE>0) {
+	  if (ppt->gauge == newtonian) {
+             if (pba->use_ppf == _FALSE_) {
+                 
+		 double Gamma_DMDE_correctunits = pba->Gamma_DMDE*pow(pba->H0,3);
+
+                 double Gamma_DMDE_a = a * Gamma_DMDE_correctunits/ pvecback[pba->index_bg_rho_fld];
+	         double R_DMDE = pvecback[pba->index_bg_rho_cdm] /  (1+w_fld ) / pvecback[pba->index_bg_rho_fld];
+
+                 dy[pv->index_pt_theta_cdm]  += Gamma_DMDE_a * (y[pv->index_pt_theta_fld]- y[pv->index_pt_theta_cdm]);
+
+                 dy[pv->index_pt_theta_fld]  += -Gamma_DMDE_a * (y[pv->index_pt_theta_fld]- y[pv->index_pt_theta_cdm]) * R_DMDE;
+	     }
+	  }
+        }
+    // end FMcC DMDE edit
 
     /** - ---> scalar field (scf) */
 
