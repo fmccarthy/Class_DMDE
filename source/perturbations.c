@@ -9399,7 +9399,7 @@ int perturbations_derivs(double tau,
                  
 		 double Gamma_DMDE_correctunits = pba->Gamma_DMDE*pow(pba->H0,3);
 
-                 double Gamma_DMDE_a = a * Gamma_DMDE_correctunits/ pvecback[pba->index_bg_rho_fld];
+                 double Gamma_DMDE_a = a * Gamma_DMDE_correctunits/ pvecback[pba->index_bg_rho_cdm];
 	         double R_DMDE = pvecback[pba->index_bg_rho_cdm] /  (1+w_fld ) / pvecback[pba->index_bg_rho_fld];
 
                  dy[pv->index_pt_theta_cdm]  += Gamma_DMDE_a * (y[pv->index_pt_theta_fld]- y[pv->index_pt_theta_cdm]);
