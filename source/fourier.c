@@ -3127,7 +3127,6 @@ int fourier_hmcode(
 
   /* Background parameters */
   double Omega_m,fnu,Omega0_m;
-  //double Gamma_DMDE,w0_fld;
   double z_at_tau;
   double rho_crit_today_in_msun_mpc3;
   double growth;
@@ -3180,12 +3179,9 @@ int fourier_hmcode(
   Omega0_m = pba->Omega0_m;
   fnu      = pba->Omega0_ncdm_tot/Omega0_m;
   // AL Modif
-  //Gamma_DMDE = pba->Gamma_DMDE;
   double w0_fld = pba->w0_fld;
   double Gamma_DMDE = pba->Gamma_DMDE;
   
-  //printf("Gamma DMDE: %f \n", Gamma_DMDE);
-  //printf("w: %f \n", w0_fld);
 
   /** If index_pk_cb, choose Omega0_cb as the matter density parameter.
    * If index_pk_m, choose Omega0_cbn as the matter density parameter. */
@@ -3282,33 +3278,7 @@ int fourier_hmcode(
   // AL Modif
   
   if (Gamma_DMDE > 0.){
-    //delta_c = 1. - 0.081 * pow(Omega_m, -0.79) * pow(-1.*pba->w0_fld, 0.557) * pow(pba->Gamma_DMDE, 0.769);
-    //delta_c = delta_c * 1.686;
-    //delta_c = delta_c * (1.+0.262*fnu);
-    
-    //Delta_v = 1. + 1.899 * pow(abs(log10(Omega_m)), 1.427) * pow(-1.*pba->w0_fld, -1.033) * pow(1+pba->Gamma_DMDE, 0.569);
-    //Delta_v = Delta_v * 178;
-    //Delta_v = Delta_v * (1.+0.916*fnu);
-  //  printf("Running modified HMCode\n");
-    
-    // Implementing modified Mead 2020 fit
-    //double p10, p11, p20, p21, p22, p12;
-    //double alpha1, alpha2;
-    //double Y = growth / pvecback[pba->index_bg_a];
-    
-    //p10 = -0.0069;
-    //p11 = -0.0208;
-    //p12 = 0.0312;
-    //alpha1 = 1.0000;
-    //p20 = 0.0001;
-    //p21 = -0.0647;
-    //p22 = -0.0417;
-    //alpha2 = 0.0;
-
-    //delta_c = (p10 + p11*(1-Y) + p12*(1-Y)*(1-Y)) * pow(log10(Omega_m), alpha1);
-    //delta_c = delta_c + (p20 + p21*(1-Y) + p22*(1-Y)*(1-Y)) * pow(log10(Omega_m), alpha2);
-    //delta_c = (1+delta_c) * 1.686;
-    
+        
     // LCDM values
     delta_c = 1.686 - 0.046 * pow(1-Omega_m, 3) + 0.034 * pow(1-Omega_m, 2) - 0.018 * (1-Omega_m);    
     Delta_v = 178 * pow(Omega_m, -0.352);
@@ -3323,7 +3293,7 @@ int fourier_hmcode(
     c1 = pow(10., c1);
     a2 = 1.85 * pow(1+z_at_tau, -2.15);
     a2 = pow(10., a2);
-    b2 = 0.96; //pow(10., 0.96);
+    b2 = 0.96;
 
     // delta_c correction (high Gamma)
     double p0, p1, p2, p3, p4, corr_c;
@@ -3359,16 +3329,6 @@ int fourier_hmcode(
     // Apply correction
     delta_c = delta_c / corr_c;
     Delta_v = Delta_v / corr_v;
-
-    // Correcting for Gamma_DMDE
-    //double X = Gamma_DMDE / Omega_m;
-    //delta_c = delta_c / (1 + 2.57e-02*X - 8.87e-04*pow(X, 2) + 1.53e-05*pow(X, 3) - 1.09e-07*pow(X, 4) + 1.77e-10*pow(X, 5));
-    //Delta_v = Delta_v / (1 - 6.44e-02*X + 3.70e-03*pow(X, 2) - 1.28e-04*pow(X, 3) + 2.14e-06*pow(X, 4) - 1.32e-08*pow(X, 5));
-    //if (delta_c < 1.64) delta_c = 1.64;
-    //if (Delta_v < 178) Delta_v = 178;
-    //printf("z %f \n", z_at_tau);
-    //printf("delta_c %f \n", delta_c);
-    //printf("Delta_v %f \n", Delta_v);
   }
   
   // mass or radius fraction respectively
