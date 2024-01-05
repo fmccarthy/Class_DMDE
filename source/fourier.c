@@ -3103,7 +3103,7 @@ int fourier_hmcode(
                    struct perturbations *ppt,
                    struct primordial *ppm,
                    struct fourier *pfo,
-                   int index_pk,
+		   int index_pk,
                    int index_tau,
                    double tau,
                    double *pk_nl,
@@ -3127,6 +3127,7 @@ int fourier_hmcode(
 
   /* Background parameters */
   double Omega_m,fnu,Omega0_m;
+  //double Gamma_DMDE,w0_fld;
   double z_at_tau;
   double rho_crit_today_in_msun_mpc3;
   double growth;
@@ -3178,6 +3179,13 @@ int fourier_hmcode(
 
   Omega0_m = pba->Omega0_m;
   fnu      = pba->Omega0_ncdm_tot/Omega0_m;
+  // AL Modif
+  //Gamma_DMDE = pba->Gamma_DMDE;
+  double w0_fld = pba->w0_fld;
+  double Gamma_DMDE = pba->Gamma_DMDE;
+  
+  //printf("Gamma DMDE: %f \n", Gamma_DMDE);
+  //printf("w: %f \n", w0_fld);
 
   /** If index_pk_cb, choose Omega0_cb as the matter density parameter.
    * If index_pk_m, choose Omega0_cbn as the matter density parameter. */
@@ -3262,6 +3270,7 @@ int fourier_hmcode(
   class_alloc(nu_arr,ppr->nsteps_for_p1h_integral*sizeof(double),pfo->error_message);
 
   // Linear theory density perturbation threshold for spherical collapse
+  //if (Gamma_DMDE == 0.){
   delta_c = 1.59+0.0314*log(sigma8); //Mead et al. (2015; arXiv 1505.07833)
   delta_c = delta_c*(1.+0.0123*log10(Omega_m)); //Nakamura & Suto (1997) fitting formula for LCDM models (as in Mead 2016)
   delta_c = delta_c*(1.+0.262*fnu); //Mead et al. (2016; arXiv 1602.02154) neutrino addition
@@ -3269,7 +3278,99 @@ int fourier_hmcode(
   // virialized overdensity
   Delta_v=418.*pow(Omega_m, -0.352); //Mead et al. (2015; arXiv 1505.07833)
   Delta_v=Delta_v*(1.+0.916*fnu); //Mead et al. (2016; arXiv 1602.02154) neutrino addition
+    //}
+  // AL Modif
+  
+  if (Gamma_DMDE > 0.){
+    //delta_c = 1. - 0.081 * pow(Omega_m, -0.79) * pow(-1.*pba->w0_fld, 0.557) * pow(pba->Gamma_DMDE, 0.769);
+    //delta_c = delta_c * 1.686;
+    //delta_c = delta_c * (1.+0.262*fnu);
+    
+    //Delta_v = 1. + 1.899 * pow(abs(log10(Omega_m)), 1.427) * pow(-1.*pba->w0_fld, -1.033) * pow(1+pba->Gamma_DMDE, 0.569);
+    //Delta_v = Delta_v * 178;
+    //Delta_v = Delta_v * (1.+0.916*fnu);
+  //  printf("Running modified HMCode\n");
+    
+    // Implementing modified Mead 2020 fit
+    //double p10, p11, p20, p21, p22, p12;
+    //double alpha1, alpha2;
+    //double Y = growth / pvecback[pba->index_bg_a];
+    
+    //p10 = -0.0069;
+    //p11 = -0.0208;
+    //p12 = 0.0312;
+    //alpha1 = 1.0000;
+    //p20 = 0.0001;
+    //p21 = -0.0647;
+    //p22 = -0.0417;
+    //alpha2 = 0.0;
 
+    //delta_c = (p10 + p11*(1-Y) + p12*(1-Y)*(1-Y)) * pow(log10(Omega_m), alpha1);
+    //delta_c = delta_c + (p20 + p21*(1-Y) + p22*(1-Y)*(1-Y)) * pow(log10(Omega_m), alpha2);
+    //delta_c = (1+delta_c) * 1.686;
+    
+    // LCDM values
+    delta_c = 1.686 - 0.046 * pow(1-Omega_m, 3) + 0.034 * pow(1-Omega_m, 2) - 0.018 * (1-Omega_m);    
+    Delta_v = 178 * pow(Omega_m, -0.352);
+    
+    // adjusting for Gamma and z
+    double a1, b1, c1, a2, b2;
+    a1 = -4.26 * pow(1+z_at_tau, 0.461);
+    a1 = pow(10., a1);
+    b1 = -2.51 * pow(1+z_at_tau, 0.683);
+    b1 = pow(10., b1);
+    c1 = -1.08 * pow(1+z_at_tau, 0.915);
+    c1 = pow(10., c1);
+    a2 = 1.85 * pow(1+z_at_tau, -2.15);
+    a2 = pow(10., a2);
+    b2 = 0.96; //pow(10., 0.96);
+
+    // delta_c correction (high Gamma)
+    double p0, p1, p2, p3, p4, corr_c;
+    p0 = 0.02843379;  
+    p1 = 1.50164417;  
+    p2 = 0.45601191;
+    p3 = -0.92081132;  
+    p4 = 0.63758186;
+    
+    corr_c = p0*pow(Gamma_DMDE, p1); 
+    corr_c = corr_c * (1.+p2*pow(log10(Gamma_DMDE/Omega_m), 2)+p3*log10(Gamma_DMDE/Omega_m));
+    corr_c = corr_c * pow(Omega_m, p4);
+    corr_c = corr_c * pow(1+z_at_tau, -4.) + 1.;
+    
+    // Delta_v correction (high Gamma)  
+    double q0, q1, q2, q3, q4, q5, corr_v;
+    q0 = 1.59253727e-02;
+    q1 = 5.73515245e-01;
+    q2 = -1.88426898e+01;
+    q3 = 4.28803022e+01;
+    q4 = 5.48417061e-01;  
+    q5 = 1.95880190e-01;
+    
+    corr_v = q0 * pow(Gamma_DMDE, q1);
+    corr_v = corr_v * (1+q2*pow(log10(Omega_m/.3), 2.)+q3*log10(Omega_m/.3));
+    corr_v = corr_v * pow(Omega_m/.3, q4) * pow(abs(log10(Gamma_DMDE)), q5);
+    corr_v = corr_v * exp(-5*(1+z_at_tau)) + 1.;
+    
+    // Apply first term
+    delta_c = delta_c + a1*pow(Gamma_DMDE, 3) + b1*pow(Gamma_DMDE, 2) + c1*Gamma_DMDE;
+    Delta_v = Delta_v + a2*pow(Gamma_DMDE, b2);
+    
+    // Apply correction
+    delta_c = delta_c / corr_c;
+    Delta_v = Delta_v / corr_v;
+
+    // Correcting for Gamma_DMDE
+    //double X = Gamma_DMDE / Omega_m;
+    //delta_c = delta_c / (1 + 2.57e-02*X - 8.87e-04*pow(X, 2) + 1.53e-05*pow(X, 3) - 1.09e-07*pow(X, 4) + 1.77e-10*pow(X, 5));
+    //Delta_v = Delta_v / (1 - 6.44e-02*X + 3.70e-03*pow(X, 2) - 1.28e-04*pow(X, 3) + 2.14e-06*pow(X, 4) - 1.32e-08*pow(X, 5));
+    //if (delta_c < 1.64) delta_c = 1.64;
+    //if (Delta_v < 178) Delta_v = 178;
+    //printf("z %f \n", z_at_tau);
+    //printf("delta_c %f \n", delta_c);
+    //printf("Delta_v %f \n", Delta_v);
+  }
+  
   // mass or radius fraction respectively
   fraction = pow(0.01, 1./3.);
 
@@ -3453,6 +3554,14 @@ int fourier_hmcode(
   eta = pfo->eta_0 - 0.3*sigma8; // halo bloating parameter
   k_star=0.584/sigma_disp;   // Damping wavenumber of the 1-halo term at very large scales;
   fdamp = 0.0095*pow(sigma_disp100*pba->h, 1.37); // Damping factor for 2-halo term
+  
+
+  // Change to HMCode 2020 values if Gamma_DMDE present AL modif
+  if (Gamma_DMDE>0.) eta = 0.1281 * pow(sigma8, -0.3644);
+  if (Gamma_DMDE>0.) k_star = 0.05618 * pow(sigma8, -1.013);
+  if (Gamma_DMDE>0.) fdamp = 0.2696 * pow(sigma8, 0.9403);
+  if (Gamma_DMDE>0.) alpha = 1.875 * pow(1.603, n_eff);
+  //printf("alpha %f \n", alpha);
   if (fdamp<1.e-3) fdamp=1.e-3;
   if (fdamp>0.99)  fdamp=0.99;
 
@@ -3534,6 +3643,7 @@ int fourier_hmcode(
     }
     else{
       fac=exp(-pow((pfo->k[index_k]/k_star), 2.));
+      if (Gamma_DMDE >0.) fac= 1. - ( pow((pfo->k[index_k]/k_star), 4.) / (1+pow((pfo->k[index_k]/k_star), 4.)) );
     }
 
     pk_1h = pk_1h*anorm*pow(pfo->k[index_k],3)*(1.-fac)/(rho_crit_today_in_msun_mpc3*Omega0_m);  // dimensionless power
@@ -3542,6 +3652,12 @@ int fourier_hmcode(
       pk_2h=pk_lin;
     }else{
       pk_2h=pk_lin*(1.-fdamp*pow(tanh(pfo->k[index_k]*sigma_disp/sqrt(fdamp)), 2.)); //dimensionless power
+      if (Gamma_DMDE >0.){ // AL modif 
+	double k_d = 0.05699 * pow(sigma8, -1.089);
+	double ratio_d = pfo->k[index_k]/k_d;
+	pk_2h=pk_lin* (1.-fdamp * pow(ratio_d, 2.853) /(1+pow(ratio_d, 2.853)) );
+      }
+		       
     }
     if (pk_2h<0.) pk_2h=0.;
     pk_nl[index_k] = pow((pow(pk_1h, alpha) + pow(pk_2h, alpha)), (1./alpha))/pow(pfo->k[index_k],3)/anorm; //converted back to P_k

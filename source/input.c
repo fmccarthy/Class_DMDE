@@ -3258,7 +3258,7 @@ int input_read_parameters_species(struct file_content * pfc,
     class_call(parser_read_double(pfc,"Gamma_DMDE",&param2,&flag2,errmsg),
              errmsg,
              errmsg);
-    if (flag2 = _TRUE_) {
+    if (flag2 == _TRUE_) {
         pba->Gamma_DMDE = param2;
     }
     //printf("GammaDMDE is %f \n",pba->Gamma_DMDE);
