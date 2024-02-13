@@ -23,5 +23,11 @@ In addition to the standard parameters of CLASS, there is no an additional cosmo
 where XXX>-1.
 
 -----------------------------------
-Additionally, there are modifications to the nonlinear halomodel computation.
+Additionally, there are modifications to the nonlinear hmcode computation as described in Lague et al. If you use 
+
+```
+'Gamma_DMDE': xxx
+'non_linear': 'hmcode'
+```
+for xxx>0, the modified non-linear model will be used. These include both incorporation of the DMDE model as well as some updates to the CLASS hmcode implementation; to use this with LCDM set Gamma_DMDE to a very small positive number. If 'non_linear' is set to 'halofit', even with finite Gamma_DMDE, the standard LCDM halofit fitting functions will be used. 
  
