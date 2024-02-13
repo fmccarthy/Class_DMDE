@@ -7,6 +7,17 @@ This is a fork of the Einstein-Boltzmann solver CLASS v3 (https://lesgourg.githu
 
 This code was described in Lague et al arXiv:2024.XXXX . Please cite this paper, along with the original CLASS citations, if you use the code.
 
+All modifications are indicated with either 
+```
+// FMcC DMDE edit 
+// end FMcC DMDE edit
+```
+or
+```
+AL modif 
+```
+.
+
 
 
 Differences with respect to CLASS
