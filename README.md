@@ -6,7 +6,7 @@ Authors: Alex Laguë, Fiona McCarthy, Colin Hill, Mathew Madhavacheril
 
 This is a fork of the Einstein-Boltzmann solver CLASS v3 (https://lesgourg.github.io/class_public/class.html), written by Julien Lesgourgues, Thomas Tram, Nils Schoeneberg, et al.; refer to the original repository for the README of CLASS, including installation instructions.
 
-This is an extension to CLASS which implements the dark matter-dark energy scattering model as introduced in Simpson (2010): https://ui.adsabs.harvard.edu/abs/arXiv:1007.1034 The code was described in Lague et al arXiv:2024.XXXX . Please cite these papers, along with the original CLASS citations, if you use the code.
+This is an extension to CLASS which implements the dark matter-dark energy scattering model as introduced in Simpson (2010): https://ui.adsabs.harvard.edu/abs/arXiv:1007.1034 The code was described in Laguë et al arXiv:2024.XXXX . Please cite these papers, along with the original CLASS citations, if you use the code.
 
 All modifications are indicated with either 
 ```
