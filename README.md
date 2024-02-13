@@ -19,6 +19,9 @@ or
 ```
 .
 
+Installation and requirements
+-----------------------------------
+Please refer to the CLASS v3 repo for installation instructions.
 
 
 Usage and differences with respect to CLASS
