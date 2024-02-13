@@ -1,7 +1,7 @@
 CLASS_DMDE: Cosmic Linear Anisotropy Solving System for dark matter-dark energy scattering
 ==============================================
 
-Authors: Alex Lague, Fiona McCarthy, Colin Hill, Mathew Madhavacheril
+Authors: Alex Laguë, Fiona McCarthy, Colin Hill, Mathew Madhavacheril
 
 This is a fork of the Einstein-Boltzmann solver CLASS v3 (https://lesgourg.github.io/class_public/class.html), written by Julien Lesgourgues, Thomas Tram, Nils Schoeneberg, et al.; refer to the original repository for the README of CLASS, including installation instructions.
 
@@ -23,7 +23,7 @@ In addition to the standard parameters of CLASS, there is no an additional cosmo
 where XXX>-1.
 
 -----------------------------------
-Additionally, there are modifications to the nonlinear hmcode computation as described in Lague et al. If you use 
+Additionally, there are modifications to the nonlinear hmcode computation as described in Laguë et al. If you use 
 
 ```
 'Gamma_DMDE': xxx
