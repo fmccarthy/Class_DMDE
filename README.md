@@ -40,5 +40,5 @@ Additionally, there are modifications to the nonlinear hmcode computation as des
 'Gamma_DMDE': xxx
 'non_linear': 'hmcode'
 ```
-for xxx>0, the modified non-linear model will be used. These include both incorporation of the DMDE model as well as some updates to the CLASS hmcode implementation; to use this with LCDM set Gamma_DMDE to a very small positive number. If 'non_linear' is set to 'halofit', even with finite Gamma_DMDE, the standard LCDM halofit fitting functions will be used. 
+for xxx>0, the modified non-linear model will be used. These include both incorporation of the DMDE model as well as some updates to the CLASS hmcode implementation; to use this with LCDM set Gamma_DMDE to a very small positive number. If 'non_linear' is set to 'halofit', even with non-zero Gamma_DMDE, the standard LCDM halofit fitting functions will be used. 
  
