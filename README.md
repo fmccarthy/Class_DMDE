@@ -12,5 +12,7 @@ This code was described in Lague et al arXiv:2024.XXXX . Please cite this paper,
 Differences with respect to CLASS
 -----------------------------------
 
+In addition to the standard parameters of CLASS, there is no an additional parameter Gamma_DMDE that can be read in the input file. This is in the explanatory.ini file. If you read this in, use_ppf must be set to 'no' and w0_fld must be greater than -1 (as in explanatory.ini)
+
 
  
