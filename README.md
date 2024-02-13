@@ -21,7 +21,7 @@ or
 
 
 
-Differences with respect to CLASS
+Usage and differences with respect to CLASS
 -----------------------------------
 
 In addition to the standard parameters of CLASS, there is no an additional cosmological parameter Gamma_DMDE that controls the size of the coupling between dark energy and dark matter perturbations. The value of this can be read in in the input file. This can be seen in the explanatory.ini file. If you read this in,it is neccesary to set:
